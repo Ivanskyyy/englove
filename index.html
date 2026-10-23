@@ -397,14 +397,14 @@
       </div>
     </div>
 
-    <!-- TOPIC CHIPS -->
-    <div id="topicsContainer" class="flex gap-2 overflow-x-auto pb-1 no-scrollbar text-xs">
-      <!-- Injected dynamically -->
-    </div>
-
     <!-- ==================== VIEW 1: DICTIONARY ==================== -->
     <div id="listView" class="flex flex-col gap-3 animate-fade-in">
       
+      <!-- TOPIC CHIPS FOR WORDS -->
+      <div id="topicsContainer" class="flex gap-2 overflow-x-auto pb-1 no-scrollbar text-xs">
+        <!-- Injected dynamically -->
+      </div>
+
       <!-- Search & Filters Bar -->
       <div class="flex flex-col gap-2">
         <div class="relative">
@@ -435,6 +435,7 @@
       <div id="wordsContainer" class="flex flex-col gap-2.5">
         <!-- Rendered dynamically -->
       </div>
+    </div> <!-- /#listView -->
     
     <!-- ==================== VIEW 1.5: EVERYDAY PHRASES ==================== -->
     <div id="phrasesView" class="hidden flex flex-col gap-3 animate-fade-in">
@@ -474,10 +475,7 @@
       <div id="phrasesContainer" class="flex flex-col gap-2.5">
         <!-- Rendered dynamically -->
       </div>
-    </div>
-
-
-    </div>
+    </div> <!-- /#phrasesView -->
 
     <!-- ==================== VIEW 2: FLASHCARDS ==================== -->
     <div id="cardsView" class="hidden flex flex-col gap-3.5 animate-fade-in">
@@ -552,7 +550,7 @@
 
       <!-- Action Buttons -->
       <div id="cardActionButtons" class="flex flex-col gap-2">
-        <div class="grid grid-cols-2 gap-2.5">
+        <!-- WORDS GAMES GRID --><div id="arenaWordsGrid" class="grid grid-cols-2 gap-2.5">
           <button onclick="handleCardAction('keep')" class="py-3 px-3 rounded-2xl border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-800 font-extrabold text-xs transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
             <span>🔄 Повторить</span>
           </button>
@@ -599,27 +597,99 @@
       <!-- QUIZ LOBBY SCREEN -->
       <div id="quizSetupScreen" class="flex flex-col gap-3">
         
-        <!-- Header Row with Pool Scope Selector -->
-        <div class="flex items-center justify-between">
-          <div>
-            <h2 class="font-black text-sm sm:text-base text-slate-900 flex items-center gap-1.5">
-              <span>🎯</span> <span>Квиз-Арена</span>
-            </h2>
-            <p class="text-[11px] text-slate-500">Нажми на карточку для старта</p>
+        <!-- ARENA MASTER SWITCH: WORDS VS PHRASES -->
+        <div class="flex bg-slate-200/90 p-1 rounded-2xl border border-slate-300 text-xs font-black shadow-inner w-full">
+          <button id="arenaModeWordsBtn" onclick="setArenaMode('words')" class="flex-1 py-2.5 rounded-xl bg-white text-indigo-950 shadow-sm flex items-center justify-center gap-1.5 transition-all">
+            <span>🔤</span> <span>Тренировка Слов</span>
+          </button>
+          <button id="arenaModePhrasesBtn" onclick="setArenaMode('phrases')" class="flex-1 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5 transition-all">
+            <span>💬</span> <span>Фразы и Предложения</span>
+          </button>
+        </div>
+
+        <!-- CONTROLS FOR WORDS (Visible when arenaMode === 'words') -->
+        <div id="arenaWordsScopeBar" class="flex flex-col gap-2.5 bg-slate-50 p-3 rounded-2xl border border-slate-200 shadow-2xs">
+          <!-- Top Row: Title + Live Counter Badge -->
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="font-black text-xs text-slate-900 flex items-center gap-1.5">
+                <span>🎯</span> <span>Слова для игры:</span>
+              </div>
+              <p class="text-[10px] text-slate-400">Фильтр по статусу и теме</p>
+            </div>
+            <span id="arenaWordsCounterBadge" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200 transition-all">
+              Доступно: <strong id="arenaWordsAvailableCount" class="font-mono">0</strong>
+            </span>
           </div>
-          <!-- Word pool toggle (compact header pill) -->
-          <div class="flex bg-slate-200/80 p-0.5 rounded-xl border border-slate-300 text-[11px] font-bold">
-            <button id="scopeLearningBtn" onclick="setQuizScope('learning')" class="px-2.5 py-1 rounded-lg bg-amber-500 text-white font-extrabold shadow-2xs">
-              🔥 Учим
+
+          <!-- Status Selector: Учим | Выучил | Все -->
+          <div class="flex bg-slate-200/80 p-0.5 rounded-xl border border-slate-300 text-[11px] font-bold w-full">
+            <button id="scopeWordsLearningBtn" onclick="setQuizScope('learning')" class="flex-1 py-1.5 rounded-lg bg-amber-500 text-white font-extrabold shadow-2xs transition-all cursor-pointer">
+              🔥 Учим (<span id="arenaWordsLearningCount">0</span>)
             </button>
-            <button id="scopeAllBtn" onclick="setQuizScope('all')" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900">
-              📚 Все
+            <button id="scopeWordsMasteredBtn" onclick="setQuizScope('mastered')" class="flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 font-extrabold transition-all cursor-pointer">
+              ✅ Выучил (<span id="arenaWordsMasteredCount">0</span>)
             </button>
+            <button id="scopeWordsAllBtn" onclick="setQuizScope('all')" class="flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 font-extrabold transition-all cursor-pointer">
+              📚 Все (<span id="arenaWordsAllCount">1000</span>)
+            </button>
+          </div>
+
+          <!-- Topic Filter Section -->
+          <div class="flex flex-col gap-1.5 pt-0.5 border-t border-slate-200/70">
+            <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 px-0.5">
+              <span>Тема слов:</span>
+              <span id="arenaWordSelectedTopicName" class="text-indigo-600 font-black">✨ Все темы</span>
+            </div>
+            <div id="arenaWordTopicChips" class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
+              <!-- Dynamically populated chips -->
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTROLS FOR PHRASES (Visible when arenaMode === 'phrases') -->
+        <div id="arenaPhrasesScopeBar" class="hidden flex flex-col gap-2.5 bg-purple-50/60 p-3 rounded-2xl border border-purple-200 shadow-2xs">
+          <!-- Top Row: Title + Live Counter Badge -->
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="font-black text-xs text-slate-900 flex items-center gap-1.5">
+                <span>🧩</span> <span>Предложения и фразы:</span>
+              </div>
+              <p class="text-[10px] text-slate-400">Тренировка в контексте</p>
+            </div>
+            <span id="arenaPhrasesCounterBadge" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-purple-100 text-purple-800 border border-purple-200 transition-all">
+              Доступно: <strong id="arenaPhrasesAvailableCount" class="font-mono">0</strong>
+            </span>
+          </div>
+
+          <!-- Status Selector: Учим | Выученные | Все -->
+          <div class="flex bg-slate-200/80 p-0.5 rounded-xl border border-slate-300 text-[11px] font-bold w-full">
+            <button id="scopePhrasesLearningBtn" onclick="setPhraseQuizScope('learning')" class="flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 font-extrabold transition-all cursor-pointer">
+              🔥 Учим (<span id="scopePhrasesLearningCount">0</span>)
+            </button>
+            <button id="scopePhrasesMasteredBtn" onclick="setPhraseQuizScope('mastered')" class="flex-1 py-1.5 rounded-lg bg-emerald-600 text-white font-extrabold shadow-2xs transition-all cursor-pointer">
+              🎉 Выученные (<span id="scopePhrasesMasteredCount">0</span>)
+            </button>
+            <button id="scopePhrasesAllBtn" onclick="setPhraseQuizScope('all')" class="flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 font-extrabold transition-all cursor-pointer">
+              📚 Все фразы (<span id="scopePhrasesAllCount">250</span>)
+            </button>
+          </div>
+
+          <!-- Topic Filter Section -->
+          <div class="flex flex-col gap-1.5 pt-0.5 border-t border-purple-200/60">
+            <div class="flex items-center justify-between text-[10px] font-bold text-slate-500 px-0.5">
+              <span>Тема предложений:</span>
+              <span id="arenaPhraseSelectedTopicName" class="text-purple-700 font-black">✨ Все фразы</span>
+            </div>
+            <div id="arenaPhraseTopicChips" class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
+              <!-- Dynamically populated chips -->
+            </div>
           </div>
         </div>
 
         <!-- 4 Mode Flip Cards Grid: 2 Columns -->
-        <div class="grid grid-cols-2 gap-2.5">
+        <div id="arenaWordsGrid" class="grid grid-cols-2 gap-2.5">
+
           
           <!-- Mode 1: Плиточки (Аудио) -->
           <div id="lobbyCard_letters" class="lobby-card perspective-800 h-[142px] cursor-pointer" onclick="flipLobbyCard('letters')">
@@ -756,6 +826,10 @@
               </div>
             </div>
           </div>
+          </div> <!-- /#arenaWordsGrid -->
+
+        <!-- PHRASES GAMES GRID (Visible when arenaMode === "phrases") -->
+        <div id="arenaPhrasesGrid" class="hidden grid grid-cols-2 gap-2.5">
           <!-- Mode 5: 🧩 Собери фразу (Кирпичики + Ловушки) -->
           <div id="lobbyCard_builder" class="lobby-card perspective-800 h-[142px] cursor-pointer" onclick="flipLobbyCard('builder')">
             <div class="lobby-card-inner relative w-full h-full rounded-2xl">
@@ -1547,6 +1621,9 @@
       renderPhraseTopicChips();
       renderPhrasesList();
       shuffleCardsDeck(false);
+      renderArenaWordTopicChips();
+      renderArenaPhraseTopicChips();
+      updateArenaScopeBadges();
     }
 
     function updateUserUI() {
@@ -1630,6 +1707,9 @@
       renderTopicChips();
       renderWordsList();
       updateFlashcard();
+      renderArenaWordTopicChips();
+      renderArenaPhraseTopicChips();
+      updateArenaScopeBadges();
     }
 
     function updateStatusFilterCounts() {
@@ -2233,6 +2313,334 @@
       }
     }
 
+    
+    // ==================== ARENA MODE & MASTERED WORDS SENTENCE ENGINE ====================
+    let arenaMode = "words"; // 'words' | 'phrases'
+    let phraseQuizScope = "mastered"; // 'mastered' | 'learning' | 'all'
+    let arenaWordTopic = "all";
+    let arenaPhraseTopic = "all";
+
+    function setArenaMode(mode) {
+      arenaMode = mode;
+      const btnW = document.getElementById('arenaModeWordsBtn');
+      const btnP = document.getElementById('arenaModePhrasesBtn');
+      const wordsScopeBar = document.getElementById('arenaWordsScopeBar');
+      const phrasesScopeBar = document.getElementById('arenaPhrasesScopeBar');
+      const wordsGrid = document.getElementById('arenaWordsGrid');
+      const phrasesGrid = document.getElementById('arenaPhrasesGrid');
+
+      if (mode === 'words') {
+        if (btnW) btnW.className = "flex-1 py-2.5 rounded-xl bg-white text-indigo-950 shadow-sm flex items-center justify-center gap-1.5 transition-all font-black";
+        if (btnP) btnP.className = "flex-1 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5 transition-all font-bold";
+        if (wordsScopeBar) wordsScopeBar.classList.remove('hidden');
+        if (phrasesScopeBar) phrasesScopeBar.classList.add('hidden');
+        if (wordsGrid) wordsGrid.classList.remove('hidden');
+        if (phrasesGrid) phrasesGrid.classList.add('hidden');
+      } else {
+        if (btnP) btnP.className = "flex-1 py-2.5 rounded-xl bg-white text-purple-950 shadow-sm flex items-center justify-center gap-1.5 transition-all font-black";
+        if (btnW) btnW.className = "flex-1 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5 transition-all font-bold";
+        if (phrasesScopeBar) phrasesScopeBar.classList.remove('hidden');
+        if (wordsScopeBar) wordsScopeBar.classList.add('hidden');
+        if (phrasesGrid) phrasesGrid.classList.remove('hidden');
+        if (wordsGrid) wordsGrid.classList.add('hidden');
+      }
+      renderArenaWordTopicChips();
+      renderArenaPhraseTopicChips();
+      updateArenaScopeBadges();
+    }
+
+    function setQuizScope(scope) {
+      selectedQuizScope = scope;
+      const btnL = document.getElementById('scopeWordsLearningBtn');
+      const btnM = document.getElementById('scopeWordsMasteredBtn');
+      const btnA = document.getElementById('scopeWordsAllBtn');
+
+      [btnL, btnM, btnA].forEach(b => {
+        if (b) b.className = "flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 font-extrabold transition-all cursor-pointer";
+      });
+
+      if (scope === 'learning') {
+        if (btnL) btnL.className = "flex-1 py-1.5 rounded-lg bg-amber-500 text-white font-extrabold shadow-2xs transition-all cursor-pointer";
+      } else if (scope === 'mastered') {
+        if (btnM) btnM.className = "flex-1 py-1.5 rounded-lg bg-emerald-600 text-white font-extrabold shadow-2xs transition-all cursor-pointer";
+      } else {
+        if (btnA) btnA.className = "flex-1 py-1.5 rounded-lg bg-indigo-600 text-white font-extrabold shadow-2xs transition-all cursor-pointer";
+      }
+
+      renderArenaWordTopicChips();
+      updateArenaScopeBadges();
+    }
+
+    function setPhraseQuizScope(scope) {
+      phraseQuizScope = scope;
+      const btnL = document.getElementById('scopePhrasesLearningBtn');
+      const btnM = document.getElementById('scopePhrasesMasteredBtn');
+      const btnA = document.getElementById('scopePhrasesAllBtn');
+
+      [btnL, btnM, btnA].forEach(b => {
+        if (b) b.className = "flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 font-extrabold transition-all cursor-pointer";
+      });
+
+      if (scope === 'learning') {
+        if (btnL) btnL.className = "flex-1 py-1.5 rounded-lg bg-amber-500 text-white font-extrabold shadow-2xs transition-all cursor-pointer";
+      } else if (scope === 'mastered') {
+        if (btnM) btnM.className = "flex-1 py-1.5 rounded-lg bg-emerald-600 text-white font-extrabold shadow-2xs transition-all cursor-pointer";
+      } else {
+        if (btnA) btnA.className = "flex-1 py-1.5 rounded-lg bg-purple-600 text-white font-extrabold shadow-2xs transition-all cursor-pointer";
+      }
+
+      renderArenaPhraseTopicChips();
+      updateArenaScopeBadges();
+    }
+
+    function setArenaWordTopic(topicId) {
+      arenaWordTopic = topicId;
+      renderArenaWordTopicChips();
+      updateArenaScopeBadges();
+    }
+
+    function setArenaPhraseTopic(topicId) {
+      arenaPhraseTopic = topicId;
+      renderArenaPhraseTopicChips();
+      updateArenaScopeBadges();
+    }
+
+    function renderArenaWordTopicChips() {
+      const container = document.getElementById('arenaWordTopicChips');
+      if (!container) return;
+      const userObj = progressData[currentUser] || {};
+
+      container.innerHTML = TOPICS.map(t => {
+        const isSelected = (arenaWordTopic === t.id);
+        const topicWords = (t.id === 'all') ? WORDS_DATA : WORDS_DATA.filter(w => w.topic === t.id);
+        let count = topicWords.length;
+        if (selectedQuizScope === 'learning') {
+          count = topicWords.filter(w => userObj[w.word] === 'learning').length;
+        } else if (selectedQuizScope === 'mastered') {
+          count = topicWords.filter(w => userObj[w.word] === 'mastered').length;
+        }
+
+        const cleanName = t.name.replace(/^[^\s]+\s*/, '');
+
+        return `
+          <button 
+            onclick="setArenaWordTopic('${t.id}')"
+            class="whitespace-nowrap px-2.5 py-1 rounded-xl border text-[11px] transition-all flex items-center gap-1 cursor-pointer shrink-0 ${
+              isSelected 
+                ? 'bg-indigo-600 text-white border-indigo-600 font-black shadow-xs' 
+                : 'bg-white text-slate-700 hover:text-slate-900 border-slate-300 font-bold'
+            }">
+            <span>${t.icon}</span> <span>${cleanName}</span>
+            <span class="text-[9px] px-1.5 py-0.2 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'} font-mono font-bold">${count}</span>
+          </button>
+        `;
+      }).join('');
+
+      const nameEl = document.getElementById('arenaWordSelectedTopicName');
+      if (nameEl) {
+        const active = TOPICS.find(t => t.id === arenaWordTopic);
+        nameEl.innerText = active ? active.name : "✨ Все темы";
+      }
+    }
+
+    function renderArenaPhraseTopicChips() {
+      const container = document.getElementById('arenaPhraseTopicChips');
+      if (!container) return;
+
+      container.innerHTML = PHRASE_TOPICS.map(t => {
+        const isSelected = (arenaPhraseTopic === t.id);
+        const pool = getFilteredArenaPhrases(t.id, phraseQuizScope);
+        const count = pool.length;
+        const cleanName = t.name.replace(/^[^\s]+\s*/, '');
+
+        return `
+          <button 
+            onclick="setArenaPhraseTopic('${t.id}')"
+            class="whitespace-nowrap px-2.5 py-1 rounded-xl border text-[11px] transition-all flex items-center gap-1 cursor-pointer shrink-0 ${
+              isSelected 
+                ? 'bg-purple-600 text-white border-purple-600 font-black shadow-xs' 
+                : 'bg-white text-slate-700 hover:text-slate-900 border-slate-300 font-bold'
+            }">
+            <span>${t.icon}</span> <span>${cleanName}</span>
+            <span class="text-[9px] px-1.5 py-0.2 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'} font-mono font-bold">${count}</span>
+          </button>
+        `;
+      }).join('');
+
+      const nameEl = document.getElementById('arenaPhraseSelectedTopicName');
+      if (nameEl) {
+        const active = PHRASE_TOPICS.find(t => t.id === arenaPhraseTopic);
+        nameEl.innerText = active ? active.name : "✨ Все фразы";
+      }
+    }
+
+    function getFilteredArenaWords() {
+      const userObj = progressData[currentUser] || {};
+      let list = WORDS_DATA;
+
+      if (arenaWordTopic !== 'all') {
+        list = list.filter(w => w.topic === arenaWordTopic);
+      }
+
+      if (selectedQuizScope === 'learning') {
+        list = list.filter(w => userObj[w.word] === 'learning');
+      } else if (selectedQuizScope === 'mastered') {
+        list = list.filter(w => userObj[w.word] === 'mastered');
+      }
+
+      return list;
+    }
+
+    function topicMatchesPhraseTopic(wordTopic, phraseTopic) {
+      if (phraseTopic === 'all') return true;
+      if (wordTopic === phraseTopic) return true;
+      if (phraseTopic === 'romantic' && (wordTopic === 'emotions' || wordTopic === 'people')) return true;
+      if (phraseTopic === 'banter' && (wordTopic === 'communication' || wordTopic === 'emotions')) return true;
+      if (phraseTopic === 'plans' && (wordTopic === 'actions' || wordTopic === 'connectors')) return true;
+      if (phraseTopic === 'slang' && wordTopic === 'communication') return true;
+      return false;
+    }
+
+    function getFilteredArenaPhrases(topicOverride, scopeOverride) {
+      const userObj = progressData[currentUser] || {};
+      const scope = scopeOverride || phraseQuizScope;
+      const topic = topicOverride || arenaPhraseTopic;
+
+      let pool = [];
+
+      if (scope === 'mastered' || scope === 'learning') {
+        const status = scope; // 'mastered' or 'learning'
+
+        // 1. Sentences from words marked with this status
+        const targetWords = WORDS_DATA.filter(w => {
+          if (userObj[w.word] !== status) return false;
+          return topicMatchesPhraseTopic(w.topic, topic);
+        });
+
+        targetWords.forEach(w => {
+          if (w.meanings && w.meanings[0] && w.meanings[0].en) {
+            pool.push({
+              id: `word_${w.word}`,
+              en: w.meanings[0].en,
+              ru: w.meanings[0].ru,
+              tip: `Слово «${w.word}» (${w.pos}) — ${w.meanings[0].def}`,
+              targetWord: w.word,
+              topic: w.topic,
+              isFromLearnedWord: true
+            });
+          }
+
+          // Search PHRASES_DATA for phrases matching this word
+          const wordRegex = new RegExp(`\\b${w.word}\\b`, 'i');
+          PHRASES_DATA.filter(p => wordRegex.test(p.en)).forEach(p => {
+            if (topic === 'all' || p.topic === topic || topicMatchesPhraseTopic(w.topic, topic)) {
+              if (!pool.some(s => s.en === p.en)) {
+                pool.push({
+                  ...p,
+                  targetWord: w.word,
+                  isFromLearnedWord: true
+                });
+              }
+            }
+          });
+        });
+
+        // 2. Direct phrases marked with this status in PHRASES_DATA
+        PHRASES_DATA.forEach(p => {
+          if (userObj[p.id] === status) {
+            if (topic === 'all' || p.topic === topic) {
+              if (!pool.some(s => s.en === p.en)) {
+                pool.push({ ...p });
+              }
+            }
+          }
+        });
+
+      } else {
+        // 'all' phrases from PHRASES_DATA
+        if (topic === 'all') {
+          pool = [...PHRASES_DATA];
+        } else {
+          pool = PHRASES_DATA.filter(p => p.topic === topic);
+        }
+      }
+
+      return pool;
+    }
+
+    function updateArenaScopeBadges() {
+      const userObj = progressData[currentUser] || {};
+
+      // WORDS COUNTS (for currently selected arenaWordTopic)
+      const baseWords = (arenaWordTopic === 'all') ? WORDS_DATA : WORDS_DATA.filter(w => w.topic === arenaWordTopic);
+      const wordsLearning = baseWords.filter(w => userObj[w.word] === 'learning').length;
+      const wordsMastered = baseWords.filter(w => userObj[w.word] === 'mastered').length;
+      const wordsAll = baseWords.length;
+
+      const elWLearn = document.getElementById('arenaWordsLearningCount');
+      if (elWLearn) elWLearn.innerText = wordsLearning;
+      const elWMast = document.getElementById('arenaWordsMasteredCount');
+      if (elWMast) elWMast.innerText = wordsMastered;
+      const elWAll = document.getElementById('arenaWordsAllCount');
+      if (elWAll) elWAll.innerText = wordsAll;
+
+      // WORDS ACTIVE AVAILABLE BADGE
+      const availableWords = getFilteredArenaWords();
+      const badgeW = document.getElementById('arenaWordsCounterBadge');
+      const countElW = document.getElementById('arenaWordsAvailableCount');
+      if (countElW) countElW.innerText = availableWords.length;
+
+      if (badgeW) {
+        if (availableWords.length >= 4) {
+          badgeW.className = "text-[10px] font-bold px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200 transition-all";
+          badgeW.innerHTML = `Доступно: <strong class="font-mono">${availableWords.length}</strong> слов`;
+        } else if (availableWords.length === 0) {
+          badgeW.className = "text-[10px] font-bold px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 border border-rose-200 transition-all";
+          badgeW.innerHTML = `0 слов — отметь в словаре`;
+        } else {
+          badgeW.className = "text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-200 transition-all";
+          badgeW.innerHTML = `Мало: <strong class="font-mono">${availableWords.length}/4</strong> слов`;
+        }
+      }
+
+      // PHRASES COUNTS (for currently selected arenaPhraseTopic)
+      const phrasesLearning = getFilteredArenaPhrases(arenaPhraseTopic, 'learning').length;
+      const phrasesMastered = getFilteredArenaPhrases(arenaPhraseTopic, 'mastered').length;
+      const basePhrases = (arenaPhraseTopic === 'all') ? PHRASES_DATA : PHRASES_DATA.filter(p => p.topic === arenaPhraseTopic);
+      const phrasesAll = basePhrases.length;
+
+      const elPLearn = document.getElementById('scopePhrasesLearningCount');
+      if (elPLearn) elPLearn.innerText = phrasesLearning;
+      const elPMast = document.getElementById('scopePhrasesMasteredCount');
+      if (elPMast) elPMast.innerText = phrasesMastered;
+      const elPAll = document.getElementById('scopePhrasesAllCount');
+      if (elPAll) elPAll.innerText = phrasesAll;
+
+      // PHRASES ACTIVE AVAILABLE BADGE
+      const availablePhrases = getFilteredArenaPhrases();
+      const badgeP = document.getElementById('arenaPhrasesCounterBadge');
+      const countElP = document.getElementById('arenaPhrasesAvailableCount');
+      if (countElP) countElP.innerText = availablePhrases.length;
+
+      if (badgeP) {
+        if (availablePhrases.length >= 4) {
+          badgeP.className = "text-[10px] font-bold px-2.5 py-1 rounded-full bg-purple-100 text-purple-800 border border-purple-200 transition-all";
+          badgeP.innerHTML = `Доступно: <strong class="font-mono">${availablePhrases.length}</strong> предл.`;
+        } else if (availablePhrases.length === 0) {
+          badgeP.className = "text-[10px] font-bold px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 border border-rose-200 transition-all";
+          badgeP.innerHTML = `0 предл. — отметь слова/фразы`;
+        } else {
+          badgeP.className = "text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-200 transition-all";
+          badgeP.innerHTML = `Мало: <strong class="font-mono">${availablePhrases.length}/4</strong> предл.`;
+        }
+      }
+    }
+
+    // Get customized sentences for user's learned words (backwards compatibility)
+    function getSentencesForWordStatus(status) {
+      return getFilteredArenaPhrases('all', status);
+    }
+
     function startQuizWithMode(mode, event) {
       if (event) event.stopPropagation();
       if (mode === 'letters') {
@@ -2243,51 +2651,28 @@
       startQuiz();
     }
 
-    function setQuizScope(scope) {
-      selectedQuizScope = scope;
-      const btnL = document.getElementById('scopeLearningBtn');
-      const btnA = document.getElementById('scopeAllBtn');
-
-      if (scope === 'learning') {
-        btnL.className = "px-2.5 py-1 rounded-lg bg-amber-500 text-white font-extrabold shadow-2xs";
-        btnA.className = "px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900";
-      } else {
-        btnA.className = "px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-extrabold shadow-2xs";
-        btnL.className = "px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900";
-      }
-    }
-
     function startQuiz() {
       const userObj = progressData[currentUser] || {};
       let pool = [];
 
-      if (selectedQuizMode === 'builder') {
-        const base = (selectedPhraseTopic === 'all') ? PHRASES_DATA : PHRASES_DATA.filter(p => p.topic === selectedPhraseTopic);
-        if (selectedQuizScope === 'learning') {
-          pool = base.filter(p => userObj[p.id] === 'learning');
-          if (pool.length < 4) {
-            alert(`В списке «🔥 Учим» сейчас меньше 4 фраз (${pool.length}). Добавь фразы во вкладке «💬 Фразы» или переключи сверху на «📚 Все»!`);
-            return;
-          }
-        } else {
-          pool = [...base];
+      const isPhrasesGame = (arenaMode === 'phrases' || selectedQuizMode === 'builder' || selectedQuizMode === 'cloze');
+
+      if (isPhrasesGame) {
+        pool = getFilteredArenaPhrases();
+        if (pool.length < 4) {
+          const scopeName = (phraseQuizScope === 'mastered') ? '«🎉 Выученные»' : (phraseQuizScope === 'learning') ? '«🔥 Учим»' : 'выбранной темы';
+          const topicName = (arenaPhraseTopic === 'all') ? 'всех тем' : `темы «${(PHRASE_TOPICS.find(t => t.id === arenaPhraseTopic) || {}).name || ''}»`;
+          alert(`В режиме ${scopeName} для ${topicName} сейчас доступно ${pool.length} предложений (нужно хотя бы 4).\n\n💡 Совет: выбери «✨ Все темы», переключи на «📚 Все фразы» или отметь больше слов/фраз!`);
+          return;
         }
       } else {
-        if (selectedQuizScope === 'learning') {
-          const base = (selectedTopic === 'all') ? WORDS_DATA : WORDS_DATA.filter(w => w.topic === selectedTopic);
-          pool = base.filter(w => userObj[w.word] === 'learning');
-          if (pool.length < 4) {
-            alert(`В списке «🔥 Учим» сейчас меньше 4 слов (${pool.length}). Добавь слова в «Учим» или выбери «📚 Все»!`);
-            return;
-          }
-        } else {
-          pool = (selectedTopic === 'all') ? [...WORDS_DATA] : WORDS_DATA.filter(w => w.topic === selectedTopic);
+        pool = getFilteredArenaWords();
+        if (pool.length < 4) {
+          const scopeName = (selectedQuizScope === 'mastered') ? '«✅ Выучил»' : (selectedQuizScope === 'learning') ? '«🔥 Учим»' : 'выбранной темы';
+          const topicName = (arenaWordTopic === 'all') ? 'всех тем' : `темы «${(TOPICS.find(t => t.id === arenaWordTopic) || {}).name || ''}»`;
+          alert(`В списке ${scopeName} для ${topicName} сейчас ${pool.length} слов (нужно хотя бы 4).\n\n💡 Совет: выбери «✨ Все темы», переключи на «📚 Все» или добавь слова в словарь!`);
+          return;
         }
-      }
-
-      if (pool.length < 4) {
-        alert("Нужно минимум 4 элемента для запуска теста!");
-        return;
       }
 
       pool = shuffleArray(pool);
@@ -2330,6 +2715,7 @@
 
       renderQuizQuestion();
     }
+
 
     function renderQuizQuestion() {
       const q = quizQuestions[currentQuizIndex];
@@ -2858,6 +3244,9 @@
       resetPhraseLimit();
       renderPhraseTopicChips();
       renderPhrasesList();
+      renderArenaWordTopicChips();
+      renderArenaPhraseTopicChips();
+      updateArenaScopeBadges();
       if (cardsContentMode === 'phrases') {
         shuffleCardsDeck(false);
       }
@@ -3246,7 +3635,13 @@
         fullEn = meaning.en;
         fullRu = meaning.ru;
         itemTip = `Определение: ${meaning.def}`;
+      } else if (targetItem.targetWord) {
+        clozeTargetWord = targetItem.targetWord;
+        fullEn = targetItem.en;
+        fullRu = targetItem.ru;
+        itemTip = targetItem.tip || "";
       } else {
+
         const tokens = targetItem.en.replace(/[.,?!]/g, '').split(/\s+/).filter(w => w.length > 3);
         clozeTargetWord = tokens[Math.floor(Math.random() * tokens.length)] || targetItem.en.split(/\s+/)[0];
         fullEn = targetItem.en;
@@ -3406,6 +3801,9 @@
         quizV.classList.remove('hidden');
         quizB.classList.add('bg-white', 'text-slate-800', 'shadow-sm');
         quizB.classList.remove('text-slate-600');
+        renderArenaWordTopicChips();
+        renderArenaPhraseTopicChips();
+        updateArenaScopeBadges();
       }
     }
 
@@ -3492,6 +3890,10 @@
     renderTopicChips();
     renderWordsList();
     renderPhraseTopicChips();
+    renderPhrasesList();
+    renderArenaWordTopicChips();
+    renderArenaPhraseTopicChips();
+    updateArenaScopeBadges();
     setupCardSwipeGestures();
     applyAvatars();
     initAppIcons();
