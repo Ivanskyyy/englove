@@ -352,6 +352,22 @@
         </div>
       </div>
 
+      <!-- Partner Vocabulary Sync -->
+      <div class="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 p-3 rounded-2xl border border-purple-200 flex flex-col gap-2 shadow-2xs">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-xs text-purple-900 flex items-center gap-1.5">
+            <span>👯‍♀️</span> <span>Синхронизация прогресса пары:</span>
+          </span>
+          <span class="text-[9px] bg-pink-500 text-white px-2 py-0.5 rounded-full font-bold">Вместе</span>
+        </div>
+        <p class="text-[11px] text-purple-800 leading-snug">
+          Занимались с одного аккаунта? Нажми, чтобы перенести все выученные слова и фразы Вани в профиль Алины.
+        </p>
+        <button onclick="copyVanyaProgressToAlina()" class="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 hover:from-indigo-500 hover:to-pink-400 text-white text-xs font-black shadow-md flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95">
+          <span>💖</span> <span>Скопировать все слова Вани → Алине</span>
+        </button>
+      </div>
+
       <!-- Profile photos picker -->
       <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 flex flex-col gap-2">
         <div class="flex items-center justify-between">
@@ -1544,9 +1560,31 @@
       if (quizQuestions.length > 0 && quizQuestions[currentQuizIndex]) { renderQuizQuestion(); }
     }
 
-    let progressData = {
+    
+    function copyVanyaProgressToAlina() {
+      if (!progressData.vanya) return;
+      let count = 0;
+      for (let key in progressData.vanya) {
+        if (progressData.vanya[key]) {
+          progressData.alina[key] = progressData.vanya[key];
+          count++;
+        }
+      }
+      saveStorage(true);
+      renderTopicChips();
+      renderWordsList();
+      renderPhraseTopicChips();
+      renderPhrasesList();
+      updateFlashcard();
+      renderArenaWordTopicChips();
+      renderArenaPhraseTopicChips();
+      updateArenaScopeBadges();
+      updateBattleBars();
+      showCardToast(`🎉 Все ${count} слов и фраз Вани добавлены Алине! 💕`);
+    }
+let progressData = {
       vanya: { "blush": "learning", "smirk": "learning", "grab": "learning", "afraid": "mastered" },
-      alina: { "boyfriend": "mastered", "trust": "learning" }
+      alina: { "blush": "learning", "smirk": "learning", "grab": "learning", "afraid": "mastered", "boyfriend": "mastered", "trust": "learning" }
     };
 
     let cloudRoom = "vanya-alina";
@@ -1603,6 +1641,22 @@
           if (!progressData.vanya) progressData.vanya = {};
           if (!progressData.alina) progressData.alina = {};
         }
+        // Auto-merge: copy all Vanya's learning and mastered words/phrases to Alina
+        const hasMerged = localStorage.getItem('top1000_merged_vanya_to_alina_v1');
+        if (!hasMerged) {
+          if (progressData.vanya && typeof progressData.vanya === 'object') {
+            for (let key in progressData.vanya) {
+              if (progressData.vanya[key]) {
+                progressData.alina[key] = progressData.vanya[key];
+              }
+            }
+            try {
+              localStorage.setItem('top1000_v4_state', JSON.stringify(progressData));
+              localStorage.setItem('top1000_merged_vanya_to_alina_v1', 'true');
+            } catch (e) {}
+          }
+        }
+
         const savedUser = localStorage.getItem('top1000_active_user');
         if (savedUser && (savedUser === 'vanya' || savedUser === 'alina' || savedUser === 'together')) {
           currentUser = savedUser;
