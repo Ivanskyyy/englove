@@ -687,7 +687,36 @@
           </div>
         </div>
 
-        <!-- 4 Mode Flip Cards Grid: 2 Columns -->
+                <!-- QUESTION COUNT SELECTOR -->
+        <div id="arenaQuestionCountBar" class="flex flex-col gap-2 bg-slate-50 p-2.5 rounded-2xl border border-slate-200 shadow-2xs">
+          <div class="flex items-center justify-between text-xs px-0.5">
+            <span class="font-black text-slate-800 flex items-center gap-1.5 text-xs">
+              <span>🔢</span> <span>Количество вопросов:</span>
+            </span>
+            <span id="arenaQuestionCountBadge" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 border border-indigo-200 transition-all">
+              Сыграем: 10 вопр.
+            </span>
+          </div>
+          <div class="flex bg-slate-200/80 p-0.5 rounded-xl border border-slate-300 text-xs font-bold w-full gap-1">
+            <button id="qCountBtn_5" onclick="setQuizQuestionsCount(5)" class="flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 font-extrabold transition-all cursor-pointer text-center">
+              5
+            </button>
+            <button id="qCountBtn_10" onclick="setQuizQuestionsCount(10)" class="flex-1 py-1.5 rounded-lg bg-indigo-600 text-white font-extrabold shadow-2xs transition-all cursor-pointer text-center">
+              10
+            </button>
+            <button id="qCountBtn_20" onclick="setQuizQuestionsCount(20)" class="flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 font-extrabold transition-all cursor-pointer text-center">
+              20
+            </button>
+            <button id="qCountBtn_50" onclick="setQuizQuestionsCount(50)" class="flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 font-extrabold transition-all cursor-pointer text-center">
+              50
+            </button>
+            <button id="qCountBtn_all" onclick="setQuizQuestionsCount('all')" class="flex-[1.5] py-1.5 rounded-lg text-slate-600 hover:text-slate-900 font-extrabold transition-all cursor-pointer text-center flex items-center justify-center gap-1">
+              <span>⚡ Все</span> (<span id="qCountAllNumber" class="font-mono">0</span>)
+            </button>
+          </div>
+        </div>
+
+<!-- 4 Mode Flip Cards Grid: 2 Columns -->
         <div id="arenaWordsGrid" class="grid grid-cols-2 gap-2.5">
 
           
@@ -2319,6 +2348,77 @@
     let phraseQuizScope = "mastered"; // 'mastered' | 'learning' | 'all'
     let arenaWordTopic = "all";
     let arenaPhraseTopic = "all";
+    let selectedQuizCount = (function() {
+      try {
+        const saved = localStorage.getItem('top1000_quiz_count');
+        if (saved === 'all') return 'all';
+        const num = parseInt(saved, 10);
+        if ([5, 10, 20, 50].includes(num)) return num;
+      } catch (e) {}
+      return 10;
+    })();
+
+    function setQuizQuestionsCount(count) {
+      selectedQuizCount = count;
+      try {
+        localStorage.setItem('top1000_quiz_count', count);
+      } catch (e) {}
+      updateQuizCountUI();
+    }
+
+    function updateQuizCountUI() {
+      const isWords = (arenaMode === 'words');
+      const availableCount = isWords ? getFilteredArenaWords().length : getFilteredArenaPhrases().length;
+
+      const countEl = document.getElementById('qCountAllNumber');
+      if (countEl) countEl.innerText = availableCount;
+
+      const activeBg = isWords ? 'bg-indigo-600' : 'bg-purple-600';
+      const activeText = 'text-white font-extrabold shadow-2xs';
+      const inactiveClass = 'text-slate-600 hover:text-slate-900 font-extrabold';
+
+      const buttons = [
+        { id: 'qCountBtn_5', val: 5 },
+        { id: 'qCountBtn_10', val: 10 },
+        { id: 'qCountBtn_20', val: 20 },
+        { id: 'qCountBtn_50', val: 50 },
+        { id: 'qCountBtn_all', val: 'all' }
+      ];
+
+      buttons.forEach(b => {
+        const el = document.getElementById(b.id);
+        if (!el) return;
+        const isSelected = (selectedQuizCount === b.val);
+        const baseClass = (b.val === 'all')
+          ? 'flex-[1.5] py-1.5 rounded-lg transition-all cursor-pointer text-center flex items-center justify-center gap-1 '
+          : 'flex-1 py-1.5 rounded-lg transition-all cursor-pointer text-center ';
+        if (isSelected) {
+          el.className = baseClass + activeBg + ' ' + activeText;
+        } else {
+          el.className = baseClass + inactiveClass;
+        }
+      });
+
+      const badge = document.getElementById('arenaQuestionCountBadge');
+      if (badge) {
+        if (selectedQuizCount === 'all') {
+          badge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full ' +
+            (isWords ? 'bg-indigo-100 text-indigo-800 border border-indigo-200' : 'bg-purple-100 text-purple-800 border border-purple-200');
+          badge.innerHTML = `⚡ Все доступные (<strong class="font-mono">${availableCount}</strong>)`;
+        } else {
+          const num = parseInt(selectedQuizCount, 10) || 10;
+          if (availableCount > 0 && availableCount < num) {
+            badge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200';
+            badge.innerHTML = `Сыграем: <strong class="font-mono">${availableCount}</strong> (из ${num})`;
+          } else {
+            badge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full ' +
+              (isWords ? 'bg-indigo-100 text-indigo-800 border border-indigo-200' : 'bg-purple-100 text-purple-800 border border-purple-200');
+            badge.innerHTML = `Сыграем: <strong class="font-mono">${num}</strong> вопр.`;
+          }
+        }
+      }
+    }
+
 
     function setArenaMode(mode) {
       arenaMode = mode;
@@ -2634,6 +2734,7 @@
           badgeP.innerHTML = `Мало: <strong class="font-mono">${availablePhrases.length}/4</strong> предл.`;
         }
       }
+      updateQuizCountUI();
     }
 
     // Get customized sentences for user's learned words (backwards compatibility)
@@ -2676,7 +2777,12 @@
       }
 
       pool = shuffleArray(pool);
-      const chosen = pool.slice(0, Math.min(10, pool.length));
+      let targetCount = pool.length;
+      if (selectedQuizCount !== 'all') {
+        const requestedNum = parseInt(selectedQuizCount, 10) || 10;
+        targetCount = Math.min(requestedNum, pool.length);
+      }
+      const chosen = pool.slice(0, targetCount);
 
       quizQuestions = chosen.map(target => {
         if (selectedQuizMode === 'builder' || selectedQuizMode === 'cloze') {
