@@ -309,12 +309,16 @@
       <!-- Quick switcher pill -->
       <div class="flex items-center justify-between pt-1 border-t border-white/10 text-[11px] text-slate-400">
         <span>Кто сейчас учит:</span>
-        <div class="flex bg-black/30 p-0.5 rounded-lg border border-white/10 gap-0.5">
-          <button id="userBtnVanya" onclick="setUser('vanya')" class="px-2.5 py-1 rounded-md bg-indigo-500 text-white font-bold text-[10px] flex items-center gap-1.5 shadow-2xs">
+        <div class="flex bg-black/40 p-0.5 rounded-xl border border-white/10 gap-0.5">
+          <button id="userBtnVanya" onclick="setUser('vanya')" class="px-2.5 py-1 rounded-lg bg-indigo-500 text-white font-bold text-[10px] flex items-center gap-1 shadow-2xs transition-all cursor-pointer">
             <img id="userSwitcherVanyaImg" class="w-3.5 h-3.5 rounded-full object-cover border border-white/50" alt="" />
             <span>Ваня</span>
           </button>
-          <button id="userBtnAlina" onclick="setUser('alina')" class="px-2.5 py-1 rounded-md text-slate-300 font-bold text-[10px] flex items-center gap-1.5 hover:text-white">
+          <button id="userBtnTogether" onclick="setUser('together')" class="px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-black text-[10px] flex items-center gap-1 transition-all cursor-pointer">
+            <span>👩‍❤️‍👨</span>
+            <span>Вместе</span>
+          </button>
+          <button id="userBtnAlina" onclick="setUser('alina')" class="px-2.5 py-1 rounded-lg text-slate-300 font-bold text-[10px] flex items-center gap-1 hover:text-white transition-all cursor-pointer">
             <img id="userSwitcherAlinaImg" class="w-3.5 h-3.5 rounded-full object-cover border border-white/50" alt="" />
             <span>Алина</span>
           </button>
@@ -504,7 +508,12 @@
         </div>
       </div>
 
-      <!-- 3D Flip Card -->
+            <!-- CARDS TOGETHER BANNER -->
+      <div id="cardsTogetherBanner" class="hidden p-2 rounded-2xl bg-gradient-to-r from-indigo-500/10 via-purple-500/15 to-pink-500/10 border border-purple-200 text-center text-xs font-bold text-purple-900 shadow-2xs">
+        👩‍❤️‍👨 Учим карточки вместе — свайп вправо «Выучил» идёт в счёт обоим! 💕
+      </div>
+
+<!-- 3D Flip Card -->
       <div id="flashcardElement" class="perspective-1000 w-full min-h-[260px] cursor-pointer" onclick="toggleCardReveal()">
         <div class="flip-card-inner relative w-full h-full min-h-[260px] rounded-3xl border border-slate-200 shadow-lg transition-transform duration-500">
           
@@ -607,7 +616,21 @@
           </button>
         </div>
 
-        <!-- CONTROLS FOR WORDS (Visible when arenaMode === 'words') -->
+                <!-- ARENA TOGETHER MODE BANNER -->
+        <div id="arenaTogetherBanner" class="hidden p-3 rounded-2xl bg-gradient-to-r from-indigo-500/15 via-purple-500/20 to-pink-500/15 border-2 border-purple-300 shadow-2xs flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <span class="text-2xl">👩‍❤️‍👨</span>
+            <div>
+              <div class="font-black text-xs text-purple-950 flex items-center gap-1.5">
+                <span>Парный режим активен</span>
+                <span class="text-[9px] bg-gradient-to-r from-indigo-500 to-pink-500 text-white px-2 py-0.5 rounded-full font-bold uppercase shadow-2xs">Вместе</span>
+              </div>
+              <p class="text-[10px] text-purple-800 font-semibold mt-0.5">Все игры в Арене прокачивают профили и Вани, и Алины одновременно!</p>
+            </div>
+          </div>
+        </div>
+
+<!-- CONTROLS FOR WORDS (Visible when arenaMode === 'words') -->
         <div id="arenaWordsScopeBar" class="flex flex-col gap-2.5 bg-slate-50 p-3 rounded-2xl border border-slate-200 shadow-2xs">
           <!-- Top Row: Title + Live Counter Badge -->
           <div class="flex items-center justify-between">
@@ -937,7 +960,23 @@
         </div>
 
         <!-- Question Card -->
-        <div id="quizQuestionCard" class="bg-white border border-slate-200 rounded-3xl p-5 flex flex-col items-center text-center gap-2 shadow-sm transition-all">
+                <!-- CO-OP / TOGETHER BANNER -->
+        <div id="quizCoopBanner" class="hidden flex items-center justify-between p-2.5 rounded-2xl bg-gradient-to-r from-indigo-500/10 via-purple-500/15 to-pink-500/10 border border-purple-200 shadow-2xs text-xs font-bold">
+          <div class="flex items-center gap-1.5">
+            <span id="quizCoopAvatar" class="text-base">👦</span>
+            <span id="quizCoopPlayerText" class="font-black text-slate-800">Вопрос для: <span class="text-indigo-600">Вани 👦</span></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="quizCoopTurnToggle" onclick="toggleCoopTurnMode()" class="text-[10px] px-2 py-0.5 rounded-lg bg-white border border-purple-200 font-extrabold text-purple-700 shadow-2xs hover:bg-purple-50 transition-all cursor-pointer">
+              🎲 По очереди
+            </button>
+            <span class="text-[10px] text-pink-600 font-extrabold bg-pink-50 px-2 py-0.5 rounded-full border border-pink-100">
+              Счёт обоим ❤️
+            </span>
+          </div>
+        </div>
+
+<div id="quizQuestionCard" class="bg-white border border-slate-200 rounded-3xl p-5 flex flex-col items-center text-center gap-2 shadow-sm transition-all">
           <div class="w-full flex justify-between items-center">
             <span id="quizBadge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-600">Тема</span>
             <button id="quizSpeakBtn" onclick="speakQuizCurrent()" class="p-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-sm shadow-xs">
@@ -1053,6 +1092,19 @@
           <div class="text-4xl font-black font-mono text-emerald-600">
             <span id="quizFinalScore">8</span> / <span id="quizFinalTotal">10</span>
           </div>
+        <!-- TOGETHER QUIZ RESULTS BREAKDOWN -->
+        <div id="quizTogetherResultsDetails" class="hidden p-3.5 rounded-2xl bg-gradient-to-r from-indigo-500/10 via-purple-500/15 to-pink-500/10 border-2 border-purple-300 text-center w-full max-w-xs flex flex-col gap-2 shadow-xs">
+          <span class="text-xs font-black text-purple-950 flex items-center justify-center gap-1.5">
+            <span>🏆</span> <span>Счёт зачислен и Ване, и Алине!</span>
+          </span>
+          <div id="quizTogetherBreakdown" class="text-xs text-slate-700 font-bold flex justify-around py-1.5 bg-white/70 rounded-xl border border-purple-200">
+            <span class="flex items-center gap-1">👦 Ваня: <strong id="resCoopVanyaScore" class="text-indigo-600 font-mono text-sm">0</strong></span>
+            <span class="text-slate-300">|</span>
+            <span class="flex items-center gap-1">👧 Алина: <strong id="resCoopAlinaScore" class="text-pink-600 font-mono text-sm">0</strong></span>
+          </div>
+          <span class="text-[10px] text-purple-800 font-bold">✨ Все правильно отвеченные слова теперь в «✅ Знаю» у обоих!</span>
+        </div>
+
         </div>
 
         <div id="quizMistakesBox" class="w-full text-left bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs flex flex-col gap-2">
@@ -1431,6 +1483,67 @@
 
     // STATE
     let currentUser = "vanya"; // 'vanya' or 'alina'
+    // CO-OP / TOGETHER MODE STATE
+    let coopTurnMode = 'alternate'; // 'alternate' or 'together'
+    let coopVanyaScore = 0;
+    let coopAlinaScore = 0;
+
+    function getCurrentUserObj() {
+      if (currentUser === 'together') {
+        const res = {};
+        const v = progressData.vanya || {};
+        const a = progressData.alina || {};
+        const allKeys = new Set([...Object.keys(v), ...Object.keys(a)]);
+        allKeys.forEach(k => {
+          if (v[k] === 'mastered' && a[k] === 'mastered') {
+            res[k] = 'mastered';
+          } else if (v[k] === 'mastered' || a[k] === 'mastered' || v[k] === 'learning' || a[k] === 'learning') {
+            res[k] = 'learning';
+          }
+        });
+        return res;
+      }
+      return progressData[currentUser] || {};
+    }
+
+    function recordCorrectQuizAnswer(q) {
+      quizScore++;
+      if (currentUser === 'together') {
+        const isVanyaTurn = (currentQuizIndex % 2 === 0);
+        if (coopTurnMode === 'alternate') {
+          if (isVanyaTurn) coopVanyaScore++;
+          else coopAlinaScore++;
+        }
+        const wordKey = q.target.word || q.target.targetWord;
+        if (wordKey) {
+          progressData.vanya[wordKey] = 'mastered';
+          progressData.alina[wordKey] = 'mastered';
+        }
+        if (q.target.id && !q.target.isFromLearnedWord) {
+          progressData.vanya[q.target.id] = 'mastered';
+          progressData.alina[q.target.id] = 'mastered';
+        }
+        saveStorage(true);
+      }
+    }
+
+    function getCoopFeedbackText(isCorrect) {
+      if (currentUser !== 'together') return '';
+      if (!isCorrect) {
+        return `<div class="text-[11px] text-pink-600 font-extrabold mt-1">👩‍❤️‍👨 Ошиблись, но вместе всё наверстаете!</div>`;
+      }
+      let who = 'Команда!';
+      if (coopTurnMode === 'alternate') {
+        who = (currentQuizIndex % 2 === 0) ? 'Ваня в точку! 👦' : 'Алина умница! 👧';
+      }
+      return `<div class="text-[11px] text-pink-600 font-extrabold mt-1">👩‍❤️‍👨 ${who} +1 балл обоим в копилку! 💕</div>`;
+    }
+
+    function toggleCoopTurnMode() {
+      coopTurnMode = (coopTurnMode === 'alternate') ? 'together' : 'alternate';
+      if (quizQuestions.length > 0 && quizQuestions[currentQuizIndex]) { renderQuizQuestion(); }
+    }
+
     let progressData = {
       vanya: { "blush": "learning", "smirk": "learning", "grab": "learning", "afraid": "mastered" },
       alina: { "boyfriend": "mastered", "trust": "learning" }
@@ -1491,7 +1604,7 @@
           if (!progressData.alina) progressData.alina = {};
         }
         const savedUser = localStorage.getItem('top1000_active_user');
-        if (savedUser && (savedUser === 'vanya' || savedUser === 'alina')) {
+        if (savedUser && (savedUser === 'vanya' || savedUser === 'alina' || savedUser === 'together')) {
           currentUser = savedUser;
         }
         const savedRoom = localStorage.getItem('top1000_cloud_room');
@@ -1657,31 +1770,73 @@
 
     function updateUserUI() {
       const isVanya = (currentUser === 'vanya');
+      const isAlina = (currentUser === 'alina');
+      const isTogether = (currentUser === 'together');
       const btnV = document.getElementById('userBtnVanya');
       const btnA = document.getElementById('userBtnAlina');
+      const btnT = document.getElementById('userBtnTogether');
       const cardV = document.getElementById('vanyaCard');
       const cardA = document.getElementById('alinaCard');
       const indV = document.getElementById('vanyaActiveIndicator');
       const indA = document.getElementById('alinaActiveIndicator');
 
-      if (isVanya) {
-        btnV.className = "px-2.5 py-1 rounded-md bg-indigo-500 text-white font-bold text-[10px] flex items-center gap-1.5 shadow-2xs";
-        btnA.className = "px-2.5 py-1 rounded-md text-slate-300 hover:text-white font-bold text-[10px] flex items-center gap-1.5";
-        cardV.className = "cursor-pointer bg-white/10 hover:bg-white/15 border-2 border-indigo-400 rounded-2xl p-2.5 flex flex-col gap-1 transition-all shadow-md";
-        cardA.className = "cursor-pointer bg-white/5 hover:bg-white/10 border border-white/15 rounded-2xl p-2.5 flex flex-col gap-1 transition-all opacity-75 hover:opacity-100 shadow-sm";
-        indV.classList.remove('hidden');
-        indA.classList.add('hidden');
+      const bannerCards = document.getElementById('cardsTogetherBanner');
+      const bannerArena = document.getElementById('arenaTogetherBanner');
+
+      if (bannerCards) {
+        if (isTogether) bannerCards.classList.remove('hidden');
+        else bannerCards.classList.add('hidden');
+      }
+      if (bannerArena) {
+        if (isTogether) bannerArena.classList.remove('hidden');
+        else bannerArena.classList.add('hidden');
+      }
+
+      if (isTogether) {
+        if (btnT) btnT.className = "px-2.5 py-1 rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-black text-[10px] flex items-center gap-1 shadow-sm";
+        if (btnV) btnV.className = "px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-bold text-[10px] flex items-center gap-1";
+        if (btnA) btnA.className = "px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-bold text-[10px] flex items-center gap-1";
+        if (cardV) cardV.className = "cursor-pointer bg-indigo-500/15 border-2 border-indigo-400/90 rounded-2xl p-2.5 flex flex-col gap-1 transition-all shadow-md";
+        if (cardA) cardA.className = "cursor-pointer bg-pink-500/15 border-2 border-pink-400/90 rounded-2xl p-2.5 flex flex-col gap-1 transition-all shadow-md";
+        if (indV) {
+          indV.classList.remove('hidden');
+          indV.className = "text-[8px] bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-1.5 py-0.2 rounded font-bold uppercase";
+          indV.innerText = "Вместе ❤️";
+        }
+        if (indA) {
+          indA.classList.remove('hidden');
+          indA.className = "text-[8px] bg-gradient-to-r from-purple-500 to-pink-500 text-white px-1.5 py-0.2 rounded font-bold uppercase";
+          indA.innerText = "Вместе ❤️";
+        }
+      } else if (isVanya) {
+        if (btnV) btnV.className = "px-2.5 py-1 rounded-lg bg-indigo-500 text-white font-bold text-[10px] flex items-center gap-1 shadow-2xs";
+        if (btnA) btnA.className = "px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-bold text-[10px] flex items-center gap-1";
+        if (btnT) btnT.className = "px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-bold text-[10px] flex items-center gap-1";
+        if (cardV) cardV.className = "cursor-pointer bg-white/10 hover:bg-white/15 border-2 border-indigo-400 rounded-2xl p-2.5 flex flex-col gap-1 transition-all shadow-md";
+        if (cardA) cardA.className = "cursor-pointer bg-white/5 hover:bg-white/10 border border-white/15 rounded-2xl p-2.5 flex flex-col gap-1 transition-all opacity-75 hover:opacity-100 shadow-sm";
+        if (indV) {
+          indV.classList.remove('hidden');
+          indV.className = "text-[8px] bg-indigo-500 text-white px-1.5 py-0.2 rounded font-bold uppercase";
+          indV.innerText = "Учит";
+        }
+        if (indA) indA.classList.add('hidden');
       } else {
-        btnA.className = "px-2.5 py-1 rounded-md bg-pink-500 text-white font-bold text-[10px] flex items-center gap-1.5 shadow-2xs";
-        btnV.className = "px-2.5 py-1 rounded-md text-slate-300 hover:text-white font-bold text-[10px] flex items-center gap-1.5";
-        cardA.className = "cursor-pointer bg-white/10 hover:bg-white/15 border-2 border-pink-400 rounded-2xl p-2.5 flex flex-col gap-1 transition-all shadow-md";
-        cardV.className = "cursor-pointer bg-white/5 hover:bg-white/10 border border-white/15 rounded-2xl p-2.5 flex flex-col gap-1 transition-all opacity-75 hover:opacity-100 shadow-sm";
-        indA.classList.remove('hidden');
-        indV.classList.add('hidden');
+        if (btnA) btnA.className = "px-2.5 py-1 rounded-lg bg-pink-500 text-white font-bold text-[10px] flex items-center gap-1 shadow-2xs";
+        if (btnV) btnV.className = "px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-bold text-[10px] flex items-center gap-1";
+        if (btnT) btnT.className = "px-2.5 py-1 rounded-lg text-slate-300 hover:text-white font-bold text-[10px] flex items-center gap-1";
+        if (cardA) cardA.className = "cursor-pointer bg-white/10 hover:bg-white/15 border-2 border-pink-400 rounded-2xl p-2.5 flex flex-col gap-1 transition-all shadow-md";
+        if (cardV) cardV.className = "cursor-pointer bg-white/5 hover:bg-white/10 border border-white/15 rounded-2xl p-2.5 flex flex-col gap-1 transition-all opacity-75 hover:opacity-100 shadow-sm";
+        if (indA) {
+          indA.classList.remove('hidden');
+          indA.className = "text-[8px] bg-pink-500 text-white px-1.5 py-0.2 rounded font-bold uppercase";
+          indA.innerText = "Учит";
+        }
+        if (indV) indV.classList.add('hidden');
       }
     }
 
-    function updateBattleBars() {
+    function updateBattleBars()
+ {
       const total = WORDS_DATA.length;
       const vanyaUser = progressData.vanya || {};
       const alinaUser = progressData.alina || {};
@@ -1708,7 +1863,10 @@
       document.getElementById('alinaLearningLabel').innerText = aLearning;
 
       const badge = document.getElementById('battleStatusBadge');
-      if (vMastered > aMastered) {
+      if (currentUser === 'together') {
+        badge.innerText = "💞 Парный режим: учим вместе!";
+        badge.className = "text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-gradient-to-r from-purple-500/30 to-pink-500/30 text-pink-200 border border-pink-400/50 shadow-xs";
+      } else if (vMastered > aMastered) {
         badge.innerText = `🔥 Ваня (+${vMastered - aMastered})`;
         badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/40";
       } else if (aMastered > vMastered) {
@@ -1726,11 +1884,26 @@
 
     function setWordStatus(word, newStatus, e) {
       if (e) e.stopPropagation();
-      const userObj = progressData[currentUser];
-      if (userObj[word] === newStatus) {
-        delete userObj[word];
+      if (currentUser === 'together') {
+        const vHas = progressData.vanya[word] === newStatus;
+        const aHas = progressData.alina[word] === newStatus;
+        if (vHas && aHas) {
+          delete progressData.vanya[word];
+          delete progressData.alina[word];
+          showCardToast(`«${word}» убрано у обоих`);
+        } else {
+          progressData.vanya[word] = newStatus;
+          progressData.alina[word] = newStatus;
+          const statusTxt = (newStatus === 'mastered') ? '✅ Знаем оба' : '🔥 Учим вместе';
+          showCardToast(`«${word}» → ${statusTxt} (зачислено обоим! 💕)`);
+        }
       } else {
-        userObj[word] = newStatus;
+        const userObj = progressData[currentUser];
+        if (userObj[word] === newStatus) {
+          delete userObj[word];
+        } else {
+          userObj[word] = newStatus;
+        }
       }
       saveStorage(true);
       renderTopicChips();
@@ -1742,7 +1915,7 @@
     }
 
     function updateStatusFilterCounts() {
-      const userObj = progressData[currentUser] || {};
+      const userObj = getCurrentUserObj();
       const currentList = (selectedTopic === 'all') ? WORDS_DATA : WORDS_DATA.filter(w => w.topic === selectedTopic);
 
       const countLearning = currentList.filter(w => userObj[w.word] === 'learning').length;
@@ -1787,7 +1960,7 @@
 
     function getFilteredWords() {
       const q = document.getElementById('searchInput').value.trim().toLowerCase();
-      const userObj = progressData[currentUser] || {};
+      const userObj = getCurrentUserObj();
 
       return WORDS_DATA.filter(item => {
         const matchesTopic = (selectedTopic === 'all') || (item.topic === selectedTopic);
@@ -1806,7 +1979,7 @@
 
     function renderTopicChips() {
       const container = document.getElementById('topicsContainer');
-      const userObj = progressData[currentUser] || {};
+      const userObj = getCurrentUserObj();
 
       container.innerHTML = TOPICS.map(t => {
         const isSelected = (selectedTopic === t.id);
@@ -1853,7 +2026,7 @@
         return;
       }
 
-      const userObj = progressData[currentUser] || {};
+      const userObj = getCurrentUserObj();
       const visibleList = list.slice(0, currentWordLimit);
 
       const itemsHtml = visibleList.map(item => {
@@ -1946,7 +2119,7 @@
 
     // FLASHCARDS & SHUFFLED STUDY DECK (WORDS & PHRASES)
     function getStudyPool() {
-      const userObj = progressData[currentUser] || {};
+      const userObj = getCurrentUserObj();
       if (cardsContentMode === 'phrases') {
         const base = (selectedPhraseTopic === 'all') ? PHRASES_DATA : PHRASES_DATA.filter(p => p.topic === selectedPhraseTopic);
         const learning = base.filter(p => userObj[p.id] === 'learning');
@@ -2086,7 +2259,13 @@
         const currentKey = currentItem ? (currentItem.word || currentItem.id) : null;
 
         if (action === 'master' && currentKey) {
-          progressData[currentUser][currentKey] = 'mastered';
+          if (currentUser === 'together') {
+            progressData.vanya[currentKey] = 'mastered';
+            progressData.alina[currentKey] = 'mastered';
+            showCardToast('🎉 Выучено! Зачислено и Ване, и Алине! 💕');
+          } else {
+            progressData[currentUser][currentKey] = 'mastered';
+          }
           saveStorage(true);
           renderTopicChips();
           renderWordsList();
@@ -2264,9 +2443,18 @@
 
       const shuffledCandidates = shuffleArray(candidates);
       const added = shuffledCandidates.slice(0, n);
-      added.forEach(w => {
-        userObj[w.word] = 'learning';
-      });
+      if (currentUser === 'together') {
+        added.forEach(w => {
+          progressData.vanya[w.word] = 'learning';
+          progressData.alina[w.word] = 'learning';
+        });
+        showCardToast(`⚡ +${added.length} слов добавлено в «Учим» для обоих!`);
+      } else {
+        added.forEach(w => {
+          userObj[w.word] = 'learning';
+        });
+        showCardToast(`⚡ +${added.length} слов добавлено в «Учим»!`);
+      }
 
       saveStorage(true);
       renderTopicChips();
@@ -2508,7 +2696,7 @@
     function renderArenaWordTopicChips() {
       const container = document.getElementById('arenaWordTopicChips');
       if (!container) return;
-      const userObj = progressData[currentUser] || {};
+      const userObj = getCurrentUserObj();
 
       container.innerHTML = TOPICS.map(t => {
         const isSelected = (arenaWordTopic === t.id);
@@ -2575,7 +2763,7 @@
     }
 
     function getFilteredArenaWords() {
-      const userObj = progressData[currentUser] || {};
+      const userObj = getCurrentUserObj();
       let list = WORDS_DATA;
 
       if (arenaWordTopic !== 'all') {
@@ -2602,7 +2790,7 @@
     }
 
     function getFilteredArenaPhrases(topicOverride, scopeOverride) {
-      const userObj = progressData[currentUser] || {};
+      const userObj = getCurrentUserObj();
       const scope = scopeOverride || phraseQuizScope;
       const topic = topicOverride || arenaPhraseTopic;
 
@@ -2669,7 +2857,7 @@
     }
 
     function updateArenaScopeBadges() {
-      const userObj = progressData[currentUser] || {};
+      const userObj = getCurrentUserObj();
 
       // WORDS COUNTS (for currently selected arenaWordTopic)
       const baseWords = (arenaWordTopic === 'all') ? WORDS_DATA : WORDS_DATA.filter(w => w.topic === arenaWordTopic);
@@ -2753,7 +2941,7 @@
     }
 
     function startQuiz() {
-      const userObj = progressData[currentUser] || {};
+      const userObj = getCurrentUserObj();
       let pool = [];
 
       const isPhrasesGame = (arenaMode === 'phrases' || selectedQuizMode === 'builder' || selectedQuizMode === 'cloze');
@@ -2842,9 +3030,32 @@
       const feedbackBox = document.getElementById('quizFeedbackBox');
       const cardEl = document.getElementById('quizQuestionCard');
 
-      cardEl.classList.remove('animate-shake', 'animate-pop-success');
-      feedbackBox.classList.add('hidden');
-      feedbackBox.innerHTML = '';
+      $1
+
+      const coopBanner = document.getElementById('quizCoopBanner');
+      if (coopBanner) {
+        if (currentUser === 'together') {
+          coopBanner.classList.remove('hidden');
+          const isVanyaTurn = (currentQuizIndex % 2 === 0);
+          const avatarEl = document.getElementById('quizCoopAvatar');
+          const playerTextEl = document.getElementById('quizCoopPlayerText');
+          const turnToggleBtn = document.getElementById('quizCoopTurnToggle');
+
+          if (coopTurnMode === 'alternate') {
+            if (avatarEl) avatarEl.innerText = isVanyaTurn ? '👦' : '👧';
+            if (playerTextEl) playerTextEl.innerHTML = isVanyaTurn 
+              ? 'Вопрос для: <span class="text-indigo-600 font-black">Вани 👦</span>' 
+              : 'Вопрос для: <span class="text-pink-600 font-black">Алины 👧</span>';
+            if (turnToggleBtn) turnToggleBtn.innerText = '🎲 По очереди';
+          } else {
+            if (avatarEl) avatarEl.innerText = '👩‍❤️‍👨';
+            if (playerTextEl) playerTextEl.innerHTML = '<span class="text-purple-700 font-black">Отвечаем вместе ❤️</span>';
+            if (turnToggleBtn) turnToggleBtn.innerText = '🤝 Сообща';
+          }
+        } else {
+          coopBanner.classList.add('hidden');
+        }
+      }
 
       const optionsContainer = document.getElementById('quizOptionsContainer');
       const inputContainer = document.getElementById('quizTypeInputContainer');
@@ -3045,7 +3256,7 @@
       }
 
       if (isCorrect) {
-        quizScore++;
+        recordCorrectQuizAnswer(q);
         document.getElementById('quizScore').innerText = quizScore;
         cardEl.classList.remove('animate-shake');
         cardEl.classList.add('animate-pop-success');
@@ -3276,18 +3487,38 @@
       const pct = Math.round((quizScore / total) * 100);
       const emojiEl = document.getElementById('quizResultEmoji');
       const titleEl = document.getElementById('quizResultTitle');
+      const coopResultsEl = document.getElementById('quizTogetherResultsDetails');
 
-      if (pct >= 80) {
-        emojiEl.innerText = "🏆";
-        titleEl.innerText = "Красавчик! Отличный результат!";
-      } else if (pct >= 50) {
-        emojiEl.innerText = "💪";
-        titleEl.innerText = "Неплохо, но есть что подтянуть!";
+      if (currentUser === 'together') {
+        emojiEl.innerText = "👩‍❤️‍👨";
+        if (pct >= 80) {
+          titleEl.innerText = "Идеальная пара! Отличный результат!";
+        } else if (pct >= 50) {
+          titleEl.innerText = "Хорошая командная работа!";
+        } else {
+          titleEl.innerText = "Вместе повторите карточки и попробуйте снова!";
+        }
+
+        if (coopResultsEl) {
+          coopResultsEl.classList.remove('hidden');
+          const vScoreEl = document.getElementById('resCoopVanyaScore');
+          const aScoreEl = document.getElementById('resCoopAlinaScore');
+          if (vScoreEl) vScoreEl.innerText = coopVanyaScore;
+          if (aScoreEl) aScoreEl.innerText = coopAlinaScore;
+        }
       } else {
-        emojiEl.innerText = "🧠";
-        titleEl.innerText = "Повтори карточки и попробуй снова!";
+        if (coopResultsEl) coopResultsEl.classList.add('hidden');
+        if (pct >= 80) {
+          emojiEl.innerText = "🏆";
+          titleEl.innerText = "Красавчик! Отличный результат!";
+        } else if (pct >= 50) {
+          emojiEl.innerText = "💪";
+          titleEl.innerText = "Неплохо, но есть что подтянуть!";
+        } else {
+          emojiEl.innerText = "🧠";
+          titleEl.innerText = "Повтори карточки и попробуй снова!";
+        }
       }
-
       const mistakesBox = document.getElementById('quizMistakesBox');
       const mistakesList = document.getElementById('quizMistakesList');
 
@@ -3391,7 +3622,7 @@
     }
 
     function getFilteredPhrases() {
-      const userObj = progressData[currentUser] || {};
+      const userObj = getCurrentUserObj();
       const q = phrasesSearchQuery;
 
       return PHRASES_DATA.filter(item => {
@@ -3412,7 +3643,7 @@
     function renderPhraseTopicChips() {
       const container = document.getElementById('phraseTopicsContainer');
       if (!container) return;
-      const userObj = progressData[currentUser] || {};
+      const userObj = getCurrentUserObj();
 
       container.innerHTML = PHRASE_TOPICS.map(t => {
         const isSelected = (selectedPhraseTopic === t.id);
@@ -3437,7 +3668,7 @@
     }
 
     function updatePhraseFilterCounts() {
-      const userObj = progressData[currentUser] || {};
+      const userObj = getCurrentUserObj();
       const currentList = (selectedPhraseTopic === 'all') ? PHRASES_DATA : PHRASES_DATA.filter(p => p.topic === selectedPhraseTopic);
 
       const countLearning = currentList.filter(p => userObj[p.id] === 'learning').length;
@@ -3453,11 +3684,26 @@
     }
 
     function togglePhraseStatus(id, newStatus) {
-      const userObj = progressData[currentUser];
-      if (userObj[id] === newStatus) {
-        delete userObj[id];
+      if (currentUser === 'together') {
+        const vHas = progressData.vanya[id] === newStatus;
+        const aHas = progressData.alina[id] === newStatus;
+        if (vHas && aHas) {
+          delete progressData.vanya[id];
+          delete progressData.alina[id];
+          showCardToast(`Фраза убрана у обоих`);
+        } else {
+          progressData.vanya[id] = newStatus;
+          progressData.alina[id] = newStatus;
+          const statusTxt = (newStatus === 'mastered') ? '✅ Знаем оба' : '🔥 Учим вместе';
+          showCardToast(`Фраза → ${statusTxt} (зачислено обоим! 💕)`);
+        }
       } else {
-        userObj[id] = newStatus;
+        const userObj = progressData[currentUser];
+        if (userObj[id] === newStatus) {
+          delete userObj[id];
+        } else {
+          userObj[id] = newStatus;
+        }
       }
       saveStorage(true);
       renderPhraseTopicChips();
@@ -3499,7 +3745,7 @@
         return;
       }
 
-      const userObj = progressData[currentUser] || {};
+      const userObj = getCurrentUserObj();
       const partnerUser = (currentUser === 'vanya') ? 'alina' : 'vanya';
       const partnerObj = progressData[partnerUser] || {};
       const partnerName = (currentUser === 'vanya') ? 'Алина' : 'Ваня';
@@ -3687,7 +3933,7 @@
       const feedbackBox = document.getElementById('quizFeedbackBox');
 
       if (isCorrect) {
-        quizScore++;
+        recordCorrectQuizAnswer({ target: builderCurrentItem });
         document.getElementById('quizScore').innerText = quizScore;
         cardEl.classList.remove('animate-shake');
         cardEl.classList.add('animate-pop-success');
